@@ -47,24 +47,24 @@
                                     <div class="row mb-3">
 
                                         <!-- <div class=""> -->
-                                        <div class="col">
+                                        <div class="col-xl-3 col-md-6 col-sm-12">
 
                                             <label for="name-filter" class="form-label">ФИО</label>
                                             <input type="text" class="form-control" id="name-filter"
                                                 placeholder="Имя содержит" value="">
                                         </div>
-                                        <div class="col">
+                                        <div class="col-xl-3 col-md-6 col-sm-12">
                                             <label for="department-filter" class="form-label">Факультет</label>
                                             <input type="text" class="form-control" id="department-filter"
                                                 placeholder="Название факультета" value="">
                                         </div>
-                                        <div class="col">
+                                        <div class="col-xl-3 col-md-6 col-sm-12">
                                             <label for="enrolledIn-filter" class="form-label">Год начала
                                                 обучения</label>
                                             <input type="text" class="form-control input-number" id="enrolledIn-filter"
                                                 placeholder="Например 2020" value="0">
                                         </div>
-                                        <div class="col">
+                                        <div class="col-xl-3 col-md-6 col-sm-12">
                                             <label for="graduatedIn-filter" class="form-label">Год окончания
                                                 обучения</label>
                                             <input type="text" class="form-control input-number" id="graduatedIn-filter"
@@ -101,7 +101,7 @@
                         Удалить</button>
                 </div> -->
 
-                <table class=" table table-bordered table-hover sortable">
+                <table class=" table table-bordered table-hover table-responsive-sm">
                     <thead>
                         <tr class="table-primary">
                             <th scope="col">ФИО</th>
@@ -132,9 +132,9 @@
                                 <form action="" class="add-student needs-validation" novalidate>
 
                                     <div class="row mb-3">
-                                        <div class="col">
+                                        <div class="col-md-4 col-sm-12">
 
-                                            <label for="last-name-input" class="form-label">Фамилия</label>
+                                            <label for="last-name-input" class="form-label mt-2 mb-1">Фамилия</label>
                                             <input type="text" class="form-control input-ru" id="last-name-input"
                                                 placeholder="от 2 до 30 символов" required minlength="2" maxlength="30">
                                             <div class="invalid-feedback">
@@ -142,16 +142,16 @@
                                             </div>
 
                                         </div>
-                                        <div class="col">
-                                            <label for="first-name-input" class="form-label">Имя</label>
+                                        <div class="col-md-4 col-sm-12">
+                                            <label for="first-name-input" class="form-label mt-2 mb-1">Имя</label>
                                             <input type="text" class="form-control input-ru" id="first-name-input"
                                                 placeholder="от 2 до 30 символов" required minlength="2" maxlength="30">
                                             <div class="invalid-feedback">
                                                 Введите имя студента. Допустимая длина от 2 до 30 символов.
                                             </div>
                                         </div>
-                                        <div class="col">
-                                            <label for="middle-name-input" class="form-label">Отчество</label>
+                                        <div class="col-md-4 col-sm-12">
+                                            <label for="middle-name-input" class="form-label mt-2 mb-1">Отчество</label>
                                             <input type="text" class="form-control input-ru" id="middle-name-input"
                                                 placeholder="от 2 до 30 символов" required minlength="2" maxlength="30">
                                             <div class="invalid-feedback">
@@ -160,24 +160,25 @@
                                         </div>
                                     </div>
                                     <div class="row mb-3">
-                                        <div class="col">
-                                            <label for="DoB-input" class="form-label">Дата рождения</label>
+                                        <div class="col-md-4 col-sm-12">
+                                            <label for="DoB-input" class="form-label mt-2 mb-1">Дата рождения</label>
                                             <input type="date" class="form-control" id="DoB-input" placeholder=""
                                                 min="1970-01-01" required>
                                             <div class="invalid-feedback">
                                                 Введите дату рождения студента. Дата должна быть больше 01.01.1970 г.
                                             </div>
                                         </div>
-                                        <div class="col">
-                                            <label for="department-input" class="form-label">Факультет</label>
-                                            <input type="text" class="form-control" id="department-input" placeholder=""
-                                                required minlength="10" maxlength="60">
+                                        <div class="col-md-4 col-sm-12">
+                                            <label for="department-input" class="form-label mt-2 mb-1">Факультет</label>
+                                            <input type="text" class="form-control" id="department-input" required
+                                                minlength="10" maxlength="60" placeholder="от 10 до 60 символов">
                                             <div class="invalid-feedback">
                                                 Введите Название факультета. Допустимая длина от 10 до 60 символов
                                             </div>
                                         </div>
-                                        <div class="col">
-                                            <label for="enrolledIn-input" class="form-label">Год начала обучения</label>
+                                        <div class="col-md-4 col-sm-12">
+                                            <label for="enrolledIn-input" class="form-label mt-2 mb-1">Год начала
+                                                обучения</label>
                                             <input type="number" class="form-control" id="enrolledIn-input"
                                                 placeholder="ГГГГ" min="2000" max="2023" required>
                                             <div class="invalid-feedback">
