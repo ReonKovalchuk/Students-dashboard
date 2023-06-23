@@ -209,6 +209,9 @@ function clearFormInputs(formClass) {
 }
 
 function setupRecordChange() {
+
+    if (studentID === 0) return;
+
     $('.add-student-btn').addClass('hidden');
     $('.add__change-record').removeClass('hidden');
 
@@ -261,6 +264,7 @@ function changeRecord() {
 // }
 
 function deleteRecord() {
+    if (studentID === 0) return;
 
     //get db
     let studentsDB = JSON.parse(localStorage.getItem('studentsDB'));
