@@ -27,3 +27,7 @@ th.sorted[data-order="1"]::after {
 th {
     background-color: rgba(135, 183, 255, 0.5)
 }
+
+.hidden {
+    display: none;
+}

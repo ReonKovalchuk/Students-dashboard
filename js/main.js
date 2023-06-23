@@ -1,5 +1,6 @@
 let DateTime = luxon.DateTime;
 let Interval = luxon.Interval;
+let studentID = 0;
 
 let studentsArrayExample = new Array(
     {
@@ -8,7 +9,8 @@ let studentsArrayExample = new Array(
         middleName: 'Иванович',
         DoB: new Date('2000-01-01'),
         enrolledIn: 2019,
-        department: 'Электротехнический'
+        department: 'Электротехнический',
+        id: 1,
     },
     {
         lastName: 'Петров',
@@ -16,7 +18,8 @@ let studentsArrayExample = new Array(
         middleName: 'Петрович',
         DoB: new Date('2004-12-19'),
         enrolledIn: 2022,
-        department: 'Информатики и телекоммуникации'
+        department: 'Информатики и телекоммуникации',
+        id: 2,
     },
     {
         lastName: 'Сидорова',
@@ -24,7 +27,8 @@ let studentsArrayExample = new Array(
         middleName: 'Михайловна',
         DoB: new Date('1992-04-10'),
         enrolledIn: 2010,
-        department: 'Животноводческий'
+        department: 'Животноводческий',
+        id: 3,
     }
 );
 if (localStorage.getItem('studentsDB') === null) {
@@ -53,7 +57,7 @@ function createTableRows() {
         tdDept = document.createElement('td');
         tdBD = document.createElement('td');
         tdStudiedIn = document.createElement('td');
-        tdObject = document.createElement('td');
+        tdID = document.createElement('td');
 
 
         tr.setAttribute('tabindex', '0');
@@ -65,23 +69,28 @@ function createTableRows() {
         tdBD.textContent = renderedDoB.textContent;
         tdBD.setAttribute('sorttable_customkey', renderedDoB.customKey);
         tdStudiedIn.textContent = renderStudyYears(student.enrolledIn);
-        tdObject.value = student;
+        tdID.textContent = student.id;
+
+        tdID.classList.add('hidden', 'id')
 
 
         tr.append(tdName);
         tr.append(tdDept);
         tr.append(tdBD);
         tr.append(tdStudiedIn);
+        tr.append(tdID);
 
         $(tr).blur(function () {
             this.classList.remove('table-active');
-            $('.change-record').prop("disabled", true);
-            $('.delete-record').prop("disabled", true);
+            // $('.table__change-record').prop("disabled", true);
+            // $('.delete-record').prop("disabled", true);
         })
         $(tr).focus(function () {
             this.classList.add('table-active');
-            $('.change-record').prop("disabled", false);
-            $('.delete-record').prop("disabled", false);
+            // $('.table__change-record').prop("disabled", false);
+            // $('.delete-record').prop("disabled", false);
+            studentID = parseInt($('.table-active .id')[0].textContent);
+
         })
 
         tbody.append(tr);
@@ -131,33 +140,18 @@ function createNewStudent() {
     newStudent.lastName = $('#last-name-input').val().trim();
     newStudent.firstName = $('#first-name-input').val().trim();
     newStudent.middleName = $('#middle-name-input').val().trim();
-    newStudent.DoB = $('#DoB-input').val();
+    newStudent.DoB = DateTime.fromISO($('#DoB-input').val());
     newStudent.enrolledIn = parseInt($('#enrolledIn-input').val());
     newStudent.department = $('#department-input').val().trim();
+    newStudent.id = DateTime.now().toString();
 
     let studentsDB = JSON.parse(localStorage.getItem('studentsDB'));
     studentsDB.push(newStudent);
     localStorage.removeItem('studentsDB');
     localStorage.setItem('studentsDB', JSON.stringify(studentsDB));
 
-    Toastify({
-        text: `Добавлена новая запись: \n ${newStudent.lastName} ${newStudent.firstName} ${newStudent.middleName}`,
-        duration: 5000,
-        destination: "https://github.com/apvarun/toastify-js",
-        newWindow: true,
-        close: true,
-        gravity: "bottom", // `top` or `bottom`
-        position: "right", // `left`, `center` or `right`
-        stopOnFocus: true, // Prevents dismissing of toast on hover
-        style: {
-            background: "rgb(135, 183, 255)",
-        },
-        offset: {
-            x: 10, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
-            y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
-        },
-        onClick: function () { } // Callback after click
-    }).showToast();
+    let message = `Добавлена новая запись: \n ${newStudent.lastName} ${newStudent.firstName} ${newStudent.middleName}`;
+    showToast(message, 'new');
 
     return newStudent;
 }
@@ -177,22 +171,18 @@ function applyFilters() {
             if (nameFilter) {
                 const fullName = `${student.lastName} ${student.firstName} ${student.middleName}`;
                 if (fullName.toLowerCase().indexOf(nameFilter) == -1) { return false }
-
             }
 
             if (deptFilter) {
                 if (student.department.toLowerCase().indexOf(deptFilter) == -1) { return false }
-
             }
 
             if (enrolledInFilter) {
                 if (student.enrolledIn !== enrolledInFilter) { return false }
-
             }
 
             if (graduatedInFilter) {
                 if ((student.enrolledIn + 4) !== graduatedInFilter) { return false }
-
             }
 
             return true;
@@ -211,29 +201,122 @@ function clearFormInputs(formClass) {
     $(`${formClass} input`).each(function (index, element) {
         element.value = '';
     });
+    if (formClass === '.add-student') {
+        $('.add-student-btn').removeClass('hidden');
+        $('.add__change-record').addClass('hidden');
+        studentID = 0;
+    }
+}
+
+function setupRecordChange() {
+    $('.add-student-btn').addClass('hidden');
+    $('.add__change-record').removeClass('hidden');
+
+    let studentsDB = JSON.parse(localStorage.getItem('studentsDB'));
+    // studentID = $('.table-active .id').textContent;
+    //find active
+    let student = studentsDB.find(student => student.id === studentID);
+    let DoB = DateTime.fromISO(student.DoB)
+
+    $('#last-name-input').val(student.lastName);
+    $('#first-name-input').val(student.firstName);
+    $('#middle-name-input').val(student.middleName);
+    $('#DoB-input').val(`${DoB.toISODate()}`);
+    $('#department-input').val(student.department);
+    $('#enrolledIn-input').val(student.enrolledIn);
+    $('#last-name-input').focus();
 
 }
 
-// function changeRecord() {
+function changeRecord() {
+    let studentsDB = JSON.parse(localStorage.getItem('studentsDB'));
 
-// }
+    let index = studentsDB.findIndex(student => student.id === studentID);
+    //change
+    studentsDB[index].lastName = $('#last-name-input').val();
+    studentsDB[index].firstName = $('#first-name-input').val();
+    studentsDB[index].middleName = $('#middle-name-input').val();
+    studentsDB[index].DoB = DateTime.fromISO($('#DoB-input').val());
+    studentsDB[index].department = $('#department-input').val();
+    studentsDB[index].enrolledIn = parseInt($('#enrolledIn-input').val());
+
+    //rewrite db
+    localStorage.removeItem('studentsDB');
+    localStorage.setItem('studentsDB', JSON.stringify(studentsDB));
+    $('.add-student-btn').removeClass('hidden');
+    $('.add__change-record').addClass('hidden');
+
+    message = `Запись изменена: \n ${studentsDB[index].lastName} ${studentsDB[index].firstName} ${studentsDB[index].middleName}`
+    showToast(message, 'change');
+
+    clearFormInputs('.add-student');
+    createTableRows();
+}
+
+
 
 // function renderTRIntoObject(tr) {
 //     // student = {}
 //     // tr[0].textContent.split
 // }
 
-// function deleteRecord() {
+function deleteRecord() {
 
-//     //get db
-//     let studentsDB = JSON.parse(localStorage.getItem('studentsDB'));
-//     let activeRow = $('.table-active');
-//     //find active
+    //get db
+    let studentsDB = JSON.parse(localStorage.getItem('studentsDB'));
 
-//     //remove
+    //find active
+    let index = studentsDB.findIndex(student => student.id === studentID);
+    //remove
+    studentsDB.splice(index, 1);
 
-//     //rewrite db
-// }
+    //rewrite db
+    localStorage.removeItem('studentsDB');
+    localStorage.setItem('studentsDB', JSON.stringify(studentsDB));
+
+    studentID = 0;
+
+    showToast('Запись удалена', 'delete')
+    createTableRows();
+}
+
+function showToast(message, type) {
+    let color = '';
+    switch (type) {
+        case 'new':
+            color = '#0d6efd';
+            break;
+        case 'change':
+            color = '#198754';
+            break;
+        case 'delete':
+            color = '#dc3545';
+            break;
+        default:
+            color = '#0d6efd';
+            break;
+
+    }
+
+    Toastify({
+        text: message,
+        duration: 5000,
+        destination: "https://github.com/apvarun/toastify-js",
+        newWindow: true,
+        close: true,
+        gravity: "bottom", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        style: {
+            background: color,
+        },
+        offset: {
+            x: 10, // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+            y: 10 // vertical axis - can be a number or a string indicating unity. eg: '2em'
+        },
+        onClick: function () { } // Callback after click
+    }).showToast();
+}
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -253,6 +336,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     });
 
+    $('.table__change-record').click(setupRecordChange);
+    $('.delete-record').click(deleteRecord);
+
+    $('.add__change-record').click(changeRecord);
+
     createTableRows();
 
     (() => {
@@ -271,10 +359,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
 
                     createNewStudent();
-
-
-                    //show toast
-
 
                     //refresh table
                     createTableRows();
